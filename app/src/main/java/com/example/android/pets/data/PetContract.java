@@ -9,7 +9,9 @@ import android.provider.BaseColumns;
 
 public final class PetContract {
 
-    public static abstract class PetEntry implements BaseColumns{
+    PetContract () {}
+
+    public static final class PetEntry implements BaseColumns{
 
         public static final String TABLE_NAME = "pets"; // name of the table
 
