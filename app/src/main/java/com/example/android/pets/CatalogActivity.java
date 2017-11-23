@@ -16,12 +16,18 @@
 package com.example.android.pets;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.example.android.pets.data.PetContract.PetEntry;
+import com.example.android.pets.data.PetDbHelper;
 
 /**
  * Displays list of pets that were entered and stored in the app.
@@ -42,6 +48,29 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        displayDatabaseInfo();
+    }
+
+    private void displayDatabaseInfo() {
+
+        PetDbHelper mDHelper = new PetDbHelper(this);
+
+        SQLiteDatabase database = mDHelper.getReadableDatabase();
+
+        // Perform this raw SQL query "SELECT * FROM pets;"
+        // to get a cursor that contains all rows from the pets table
+        Cursor cursor = database.rawQuery("SELECT * FROM "+ PetEntry.TABLE_NAME,
+                null);
+
+        try {
+            // Display the no. of rows in the cursor
+            TextView displayView = (TextView)findViewById(R.id.text_view_pet);
+            displayView.setText("Number of rows in pets databse table: " + cursor.getCount());
+        }finally {
+            // Close the cursor
+            cursor.close();
+        }
     }
 
     @Override
