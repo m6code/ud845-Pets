@@ -16,10 +16,10 @@ public final class PetContract {
         public static final String TABLE_NAME = "pets"; // name of the table
 
         public static final String _ID = BaseColumns._ID;  // unique id of pet INTEGER
-        public static final String COLUMN_NAME = "name"; // Name of the pet. Type: TEXT
-        public static final String COLUMN_BREED = "breed"; // Breed of the pet. Type: TEXT
-        public static final String COLUMN_GENDER = "gender"; // Gender of the pet. Type: INTEGER
-        public static final String COLUMN_WEIGHT = "weight"; // Weight of the pet. Type: INTEGER
+        public static final String COLUMN_PET_NAME = "name"; // Name of the pet. Type: TEXT
+        public static final String COLUMN_PET_BREED = "breed"; // Breed of the pet. Type: TEXT
+        public static final String COLUMN_PET_GENDER = "gender"; // Gender of the pet. Type: INTEGER
+        public static final String COLUMN_PET_WEIGHT = "weight"; // Weight of the pet. Type: INTEGER
 
         /** Possible values for gender of pets */
         public static final int GENDER_MALE = 1;
