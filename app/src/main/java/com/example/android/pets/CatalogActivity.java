@@ -15,6 +15,7 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +34,9 @@ import com.example.android.pets.data.PetDbHelper;
  * Displays list of pets that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity {
+
+    private PetDbHelper mDHelper;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +58,13 @@ public class CatalogActivity extends AppCompatActivity {
 
     private void displayDatabaseInfo() {
 
-        PetDbHelper mDHelper = new PetDbHelper(this);
+        mDHelper = new PetDbHelper(this);
 
-        SQLiteDatabase database = mDHelper.getReadableDatabase();
+        db = mDHelper.getReadableDatabase();
 
         // Perform this raw SQL query "SELECT * FROM pets;"
         // to get a cursor that contains all rows from the pets table
-        Cursor cursor = database.rawQuery("SELECT * FROM "+ PetEntry.TABLE_NAME,
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ PetEntry.TABLE_NAME,
                 null);
 
         try {
@@ -87,7 +91,7 @@ public class CatalogActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                // Do nothing for now
+                insertPet();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
@@ -95,5 +99,18 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertPet() {
+        // Create the values to be inserted using contentValues
+        ContentValues values = new ContentValues();
+        values.put(PetEntry.COLUMN_PET_NAME, "Toto");
+        values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
+        values.put(PetEntry.COLUMN_PET_GENDER, "Male");
+        values.put(PetEntry.COLUMN_PET_WEIGHT, "7");
+
+        // Get the database and Insert the values into the db
+        db = mDHelper.getWritableDatabase();
+        db.insert(PetEntry.TABLE_NAME,null,values);
     }
 }
