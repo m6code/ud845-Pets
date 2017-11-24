@@ -36,7 +36,6 @@ import com.example.android.pets.data.PetDbHelper;
 public class CatalogActivity extends AppCompatActivity {
 
     private PetDbHelper mDHelper;
-    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class CatalogActivity extends AppCompatActivity {
 
         mDHelper = new PetDbHelper(this);
 
-        db = mDHelper.getReadableDatabase();
+        SQLiteDatabase db = mDHelper.getReadableDatabase();
 
         // Perform this raw SQL query "SELECT * FROM pets;"
         // to get a cursor that contains all rows from the pets table
@@ -110,7 +109,13 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_WEIGHT, "7");
 
         // Get the database and Insert the values into the db
-        db = mDHelper.getWritableDatabase();
+        SQLiteDatabase db = mDHelper.getWritableDatabase();
         db.insert(PetEntry.TABLE_NAME,null,values);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseInfo();
     }
 }
