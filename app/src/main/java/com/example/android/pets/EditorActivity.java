@@ -114,13 +114,12 @@ public class EditorActivity extends AppCompatActivity {
         String petName = mNameEditText.getText().toString().trim();
         String petBreed = mBreedEditText.getText().toString().trim();
         String petWeight = mWeightEditText.getText().toString().trim();
-        String petGender = mGenderSpinner.getSelectedItem().toString();
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, petName);
         values.put(PetEntry.COLUMN_PET_BREED, petBreed);
         values.put(PetEntry.COLUMN_PET_WEIGHT, petWeight);
-        values.put(PetEntry.COLUMN_PET_GENDER, petGender);
+        values.put(PetEntry.COLUMN_PET_GENDER, mGender);
 
         PetDbHelper mDHelper = new PetDbHelper(this);
 
@@ -128,8 +127,13 @@ public class EditorActivity extends AppCompatActivity {
 
         long newRowID = db.insert(PetEntry.TABLE_NAME,null,values);
 
-        Toast.makeText(getApplicationContext(),"New row inserted at "+ newRowID,
-                Toast.LENGTH_LONG).show();
+        if (newRowID == -1){
+            Toast.makeText(getApplicationContext(),"Error saving pet",
+                    Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getApplicationContext(),"New row inserted at "+ newRowID,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

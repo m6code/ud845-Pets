@@ -61,11 +61,24 @@ public class CatalogActivity extends AppCompatActivity {
 
         SQLiteDatabase db = mDHelper.getReadableDatabase();
 
-        // Perform this raw SQL query "SELECT * FROM pets;"
-        // to get a cursor that contains all rows from the pets table
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ PetEntry.TABLE_NAME,
-                null);
+        // Create the projection
+        String [] projection = {
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
 
+        // Pass projection into the query method
+        Cursor cursor = db.query(
+               PetEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
         try {
             // Display the no. of rows in the cursor
             TextView displayView = (TextView)findViewById(R.id.text_view_pet);
