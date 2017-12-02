@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -152,9 +153,8 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, "Male");
         values.put(PetEntry.COLUMN_PET_WEIGHT, "7");
 
-        // Get the database and Insert the values into the db
-        SQLiteDatabase db = mDHelper.getWritableDatabase();
-        db.insert(PetEntry.TABLE_NAME,null,values);
+        // Insert a new row for Toto into the provider using the content resolver
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI,values);
     }
 
     @Override
