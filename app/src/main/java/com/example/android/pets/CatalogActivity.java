@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
 
@@ -59,8 +60,6 @@ public class CatalogActivity extends AppCompatActivity {
 
         mDHelper = new PetDbHelper(this);
 
-        SQLiteDatabase db = mDHelper.getReadableDatabase();
-
         // Create the projection
         String [] projection = {
                 PetEntry._ID,
@@ -70,15 +69,8 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_WEIGHT
         };
 
-        // Pass projection into the query method
-        Cursor cursor = db.query(
-               PetEntry.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null);
+        Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI,
+                projection,null,null,null);
 
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
 
