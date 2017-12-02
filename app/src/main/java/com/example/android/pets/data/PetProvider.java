@@ -2,7 +2,6 @@ package com.example.android.pets.data;
 
 /**
  * Created by Benjamin on 11/27/2017.
- *
  */
 
 import android.content.ContentProvider;
@@ -60,7 +59,6 @@ public class PetProvider extends ContentProvider {
     private PetDbHelper mDHelper;
 
 
-
     @Override
     public boolean onCreate() {
         //Create and initialize a PetDbHelper object to gain access to the pets database.
@@ -87,8 +85,8 @@ public class PetProvider extends ContentProvider {
                 // For the PETS code, query the pets table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
-                cursor = database.query(PetEntry.TABLE_NAME,projection,selection,selectionArgs,
-                        null,null,sortOrder);
+                cursor = database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
                 break;
             case PET_ID:
                 // For the PET_ID code, extract out the ID from the URI.
@@ -118,6 +116,7 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
+
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PETS:
@@ -133,14 +132,32 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
+        // Check if a valid pet name is given
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+
+        // Check if the weight if the pet is given
+        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet weight not provided");
+        }
+
+        // Check that the gender is valid
+        Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        if (gender == null || !PetEntry.isValidGender(gender)) {
+            throw new IllegalArgumentException("Pet requires valid gender");
+        }
+
         SQLiteDatabase database = mDHelper.getWritableDatabase();
 
         // Insert the new pet with the given values
-        long id = database.insert(PetEntry.TABLE_NAME,null,values);
+        long id = database.insert(PetEntry.TABLE_NAME, null, values);
 
         // Check if insertion was successful
-        if (id == -1){
-            Log.e(LOG_TAG, "Failed to insert row for " + uri );
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
 
