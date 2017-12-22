@@ -16,6 +16,7 @@
 package com.example.android.pets;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,7 +46,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     /* Adapter for the listView */
     PetCursorAdapter mCursorAdapter;
 
-    /** Identifier for the pet data loader */
+    /**
+     * Identifier for the pet data loader
+     */
     private static final int PET_LOADER = 0;
 
     @Override
@@ -74,6 +78,25 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         // Kick off the loader
         getLoaderManager().initLoader(PET_LOADER, null, this);
+
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent editIntent = new Intent(getApplicationContext(), EditorActivity.class);
+
+                // Form the content URI that represents the specific pet that was clicked on,
+                // by appending the "id" (passed as input to this method) onto the
+                // {@link PetEntry#CONTENT_URI}.
+                // For example, the URI would be "content://com.example.android.pets/pets/2"
+                // if the pet with ID 2 was clicked on.
+                Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+
+                // Set the URI on the data field of the intent
+                editIntent.setData(currentPetUri);
+                // Start the intent
+                startActivity(editIntent);
+            }
+        });
     }
 
     @Override
@@ -109,13 +132,13 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
         // Insert a new row for Toto into the provider using the content resolver
-        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI,values);
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // Define a projection that specifies the columns from the table we care about
-        String[] projection ={
+        String[] projection = {
                 PetEntry._ID,
                 PetEntry.COLUMN_PET_NAME,
                 PetEntry.COLUMN_PET_BREED
@@ -128,7 +151,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 null,                  // No selection clause
                 null,               // No selection arguments
                 null                   // No sort order; use default
-                );
+        );
     }
 
     @Override
