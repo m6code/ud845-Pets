@@ -152,7 +152,7 @@ public class EditorActivity extends AppCompatActivity implements
         });
     }
 
-    private void insertPet() {
+    private void savePet() {
 
         String petName = mNameEditText.getText().toString().trim();
         String petBreed = mBreedEditText.getText().toString().trim();
@@ -165,16 +165,29 @@ public class EditorActivity extends AppCompatActivity implements
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
 
 
-        // Insert new pet in the provider
-        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+        if (mCurrentPetUri == null){
+            // Insert new pet in the provider
+            Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
-        // Check if successful
-        if (newUri == null) {
-            Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.editor_insert_pet_success),
-                    Toast.LENGTH_SHORT).show();
+            // Check if successful
+            if (newUri == null) {
+                Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.editor_insert_pet_success),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            int rowsAffected = getContentResolver().update(mCurrentPetUri, values,null, null);
+
+            // Show toast
+            if (rowsAffected == 0){
+                Toast.makeText(this,getString(R.string.editor_udpdate_pet_failed),
+                        Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this,getString(R.string.editor_udpdate_pet_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -193,7 +206,7 @@ public class EditorActivity extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // save the pet
-                insertPet();
+                savePet();
                 // close the editor view
                 finish();
                 return true;
