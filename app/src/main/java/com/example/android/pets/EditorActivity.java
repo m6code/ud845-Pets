@@ -101,6 +101,9 @@ public class EditorActivity extends AppCompatActivity implements
         if (mCurrentPetUri == null) {
             // This is a new pet, so change the app bar to say "Add a Pet"
             setTitle(getString(R.string.editor_activity_title_new_pet));
+
+            // INvalidate the options menu, so delete menu can be hidden
+            invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
             setTitle(getString(R.string.editor_activity_title_edit_pet));
@@ -234,6 +237,17 @@ public class EditorActivity extends AppCompatActivity implements
                         Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is anew pet, hide the "Delete" Menu item
+        if (mCurrentPetUri == null){
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
     }
 
     @Override
