@@ -2,6 +2,7 @@ package com.example.android.pets;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,11 @@ public class PetCursorAdapter extends CursorAdapter {
         //Extract properties from cursor
         String petName = cursor.getString(nameColumnIndex);
         String petBreed = cursor.getString(breedColumnIndex);
+
+        // If the breed isempty use the default text "Unknown breed"
+        if (TextUtils.isEmpty(petBreed)){
+            petBreed =context.getString(R.string.unknown_breed);
+        }
 
         // UPdate the text views
         tvName.setText(petName);
